@@ -1,36 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birthday Surprise for Mark</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
-            text-align: center;
-            padding: 50px;
-        }
-        h1 {
-            color: #ff69b4;
-        }
-        p {
-            font-size: 20px;
-        }
-        .button {
-            background-color: #ff1493;
-            color: white;
-            padding: 15px 25px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Mark ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(120deg, #ffd1dc, #c2e9fb);
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
+  text-align: center;
+}
+
+.container {
+  max-width: 90%;
+}
+
+h1 {
+  font-size: 28px;
+  color: #333;
+  min-height: 60px;
+}
+
+button {
+  margin-top: 30px;
+  padding: 12px 28px;
+  font-size: 18px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(45deg, #ff6b81, #ff9a9e);
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+.fade {
+  animation: fadeIn 1s;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+/* ❤️ 爱心动画 */
+.heart {
+  position: fixed;
+  color: #ff6b81;
+  animation: float 4s linear infinite;
+}
+
+@keyframes float {
+  0% {transform: translateY(0); opacity:1;}
+  100% {transform: translateY(-800px); opacity:0;}
+}
+</style>
 </head>
+
 <body>
-    <h1>Surprise, Mark!</h1>
-    <p>Today is a special day filled with love and joy.</p>
-    <p>Wishing you a fantastic birthday!</p>
-    <a href="#" class="button">Open Your Surprise!</a>
+
+<div class="container">
+  <h1 id="text"></h1>
+  <button onclick="next()">Tap to continue</button>
+</div>
+
+<script>
+const messages = [
+  "Today is a special day 🎂",
+  "It's your birthday",
+  "I was thinking what gift to give you...",
+  "Nothing felt special enough",
+  "So I made this just for you",
+  "Maybe it's a bit silly",
+  "But I really wanted to do it",
+  "There is something I've been thinking about...",
+  "I'm not sure if I should say it...",
+  "...",
+  "I think I like you ❤️"
+];
+
+let index = 0;
+let typing = false;
+
+function typeText(text, i = 0) {
+  const el = document.getElementById("text");
+  if (i < text.length) {
+    el.innerHTML += text.charAt(i);
+    setTimeout(() => typeText(text, i + 1), 50);
+  } else {
+    typing = false;
+  }
+}
+
+function next() {
+  if (typing) return;
+
+  const el = document.getElementById("text");
+  el.innerHTML = "";
+  el.classList.add("fade");
+
+  typing = true;
+
+  if (index < messages.length) {
+    typeText(messages[index]);
+    index++;
+  }
+
+  // 💥最后效果
+  if (index === messages.length) {
+    document.querySelector("button").style.display = "none";
+    startHearts();
+  }
+}
+
+// ❤️生成爱心
+function startHearts() {
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.fontSize = Math.random() * 20 + 20 + "px";
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+      heart.remove();
+    }, 4000);
+  }, 300);
+}
+
+// 初始文字
+next();
+</script>
+
 </body>
 </html>
