@@ -12,67 +12,65 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(120deg, #ffd1dc, #c2e9fb);
+  background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
   font-family: 'Segoe UI', sans-serif;
-  overflow: hidden;
   text-align: center;
-}
-
-.container {
-  max-width: 90%;
+  overflow: hidden;
 }
 
 h1 {
   font-size: 28px;
-  color: #333;
   min-height: 60px;
-}
-
-button {
-  margin-top: 30px;
-  padding: 12px 28px;
-  font-size: 18px;
-  border: none;
-  border-radius: 25px;
-  background: linear-gradient(45deg, #ff6b81, #ff9a9e);
-  color: white;
-  cursor: pointer;
+  color: #333;
   transition: 0.3s;
 }
 
-button:hover {
-  transform: scale(1.1);
+button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  border-radius: 25px;
+  border: none;
+  background: #ff6b81;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.fade {
-  animation: fadeIn 1s;
+button:active {
+  transform: scale(0.95);
 }
 
-@keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
+img {
+  width: 200px;
+  border-radius: 15px;
+  margin-top: 20px;
+  display: none;
 }
 
-/* ❤️ 爱心动画 */
+/* ❤️爱心 */
 .heart {
   position: fixed;
   color: #ff6b81;
-  animation: float 4s linear infinite;
+  animation: float 4s linear;
 }
 
 @keyframes float {
-  0% {transform: translateY(0); opacity:1;}
-  100% {transform: translateY(-800px); opacity:0;}
+  from {transform: translateY(0); opacity:1;}
+  to {transform: translateY(-700px); opacity:0;}
 }
 </style>
 </head>
 
-<body>
+<body onclick="next()">
 
-<div class="container">
-  <h1 id="text"></h1>
-  <button onclick="next()">Tap to continue</button>
-</div>
+<div>
+  <h1 id="text">Tap anywhere 💌</h1>
+  <button onclick="next()">Continue</button>
+  <br>
+  <img id="photo" src="mmexport1775756575498.jpg">
+
+<!-- 🎵音乐（点击后自动播放） -->
+<audio id="bgm" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
 <script>
 const messages = [
@@ -83,64 +81,77 @@ const messages = [
   "So I made this just for you",
   "Maybe it's a bit silly",
   "But I really wanted to do it",
-  "There is something I've been thinking about...",
-  "I'm not sure if I should say it...",
-  "...",
-  "I think I like you ❤️"
+  "There is something I want to tell you...",
+  "👉 I've liked you for a while ❤️"
 ];
 
-let index = 0;
+let i = 0;
 let typing = false;
+let currentText = "";
+let fullText = "";
 
-function typeText(text, i = 0) {
-  const el = document.getElementById("text");
-  if (i < text.length) {
-    el.innerHTML += text.charAt(i);
-    setTimeout(() => typeText(text, i + 1), 50);
-  } else {
-    typing = false;
+function typeText(text) {
+  let j = 0;
+  typing = true;
+  fullText = text;
+  currentText = "";
+  document.getElementById("text").innerText = "";
+
+  function typingEffect() {
+    if (j < text.length) {
+      currentText += text[j];
+      document.getElementById("text").innerText = currentText;
+      j++;
+      setTimeout(typingEffect, 40);
+    } else {
+      typing = false;
+    }
   }
+
+  typingEffect();
 }
 
 function next() {
-  if (typing) return;
+  // 🎵播放音乐（只触发一次）
+  document.getElementById("bgm").play().catch(()=>{});
 
-  const el = document.getElementById("text");
-  el.innerHTML = "";
-  el.classList.add("fade");
-
-  typing = true;
-
-  if (index < messages.length) {
-    typeText(messages[index]);
-    index++;
+  // 👉 打字中点击 = 直接显示完整
+  if (typing) {
+    document.getElementById("text").innerText = fullText;
+    typing = false;
+    return;
   }
 
-  // 💥最后效果
-  if (index === messages.length) {
+  if (i < messages.length) {
+    typeText(messages[i]);
+    i++;
+  }
+
+  // 📸中途展示图片（第5句后）
+  if (i === 5) {
+    document.getElementById("photo").style.display = "block";
+  }
+
+  // 💥最终效果
+  if (i === messages.length) {
     document.querySelector("button").style.display = "none";
+    document.getElementById("text").style.fontSize = "34px";
     startHearts();
   }
 }
 
-// ❤️生成爱心
+// ❤️爱心生成
 function startHearts() {
   setInterval(() => {
     const heart = document.createElement("div");
     heart.className = "heart";
     heart.innerHTML = "❤️";
     heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.fontSize = Math.random() * 20 + 20 + "px";
     document.body.appendChild(heart);
 
-    setTimeout(() => {
-      heart.remove();
-    }, 4000);
-  }, 300);
+    setTimeout(() => heart.remove(), 4000);
+  }, 200);
 }
-
-// 初始文字
-next();
 </script>
 
 </body>
